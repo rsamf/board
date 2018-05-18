@@ -29,6 +29,9 @@ def wiki():
     auth.wikimenu() # add the wiki to the menu
     return auth.wiki() 
 
+def two():
+    response.view='default/2d.html'
+    return dict()
 # ---- Action for login/register/etc (required for auth) -----
 def user():
     """
