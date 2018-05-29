@@ -10,6 +10,12 @@
   width: 80px;
   background: black;
 }
+#control>input {
+  width: 100%;
+}
+#control>label {
+  color: white;
+}
 body {
   margin: 0;
   height: 100vh;

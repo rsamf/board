@@ -4,11 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
   <link rel="stylesheet" href="{{=URL('static','css/2d.css')}}">
   <title>2D Board</title>
 </head>
 <body>
-  <div id="control"></div>
+  <div id="control">
+    <label for="color">Color</label>
+    <input type="color" value="#4422ee" id="color">
+    <label for="width">Width</label>
+    <input type="range" value="1" id="width">
+  </div>
   <canvas id="board"></canvas>
   <script src="{{=URL('static','js/2d/index.js')}}"></script>
 </body>
