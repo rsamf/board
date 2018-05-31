@@ -4,7 +4,14 @@
 <script src="{{=URL('static', 'js/vue.js')}}"></script>
 <script src="{{=URL('static', 'js/index.js')}}"></script>
 
-<div class="vue">
+<div id="vue" class="vue">
+  <div v-if="user">
+
+  </div>
+  <div v-else>
+    <h1>Please Log in to use this site</h1>
+    <p>Logging in will allow you to create and view other boards</p>
+  </div>
   
 </div>
 
