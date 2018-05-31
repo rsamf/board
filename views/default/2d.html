@@ -10,10 +10,25 @@
 </head>
 <body>
   <div id="control">
+    <label for="project">Project Name</label>
+    <input type="text" id="project">
     <label for="color">Color</label>
     <input type="color" value="#4422ee" id="color">
     <label for="width">Width</label>
     <input type="range" value="1" id="width">
+    <label for="width">Undo Size</label>
+    <input type="range" value="5" min="1" max="50" id="undoSize">
+    <label for="lock">Mouse Lock</label>
+    <label class="switch">
+      <input id="lock" type="checkbox">
+      <span class="slider"></span>
+    </label>
+    <label>Export .png</label>
+    <button onclick="downloadImage()">Export</button>
+    <label>Save .json</label>
+    <button onclick="downloadJSON()">Save</button>
+    <label for="reduceFactor">Reduce Size</label>
+    <input type="number" id="reduceFactor">
   </div>
   <canvas id="board"></canvas>
   <script src="{{=URL('static','js/2d/index.js')}}"></script>
