@@ -4,7 +4,6 @@ let rect = board.getBoundingClientRect();
 let mouse = {
   lock: false
 };
-let freq = 2;
 
 // Every element in action is an array
 // Each array has values to structure a line
@@ -19,20 +18,23 @@ setup();
  * Download
  */
 function downloadImage(){
-  let projectName = document.getElementById('project').value;
+  let projectName = document.getElementById('project').value || "2d.png";
   let link = document.createElement('a');
   link.href = board.toDataURL();
   link.download = projectName;
   link.click();
 }
 
-// function downloadJSON(){
-//   let projectName = document.getElementById('project').value;
-//   let link = document.createElement('a');
-//   link.href = 
-//   link.download = projectName;
-//   link.click();
-// }
+function downloadJSON(){
+  reduceSize(true);
+  let projectName = document.getElementById('project').value;
+  let link = document.createElement('a');
+  let blob = new Blob([JSON.stringify(actions)], {type: "application/json"});
+  let url = URL.createObjectURL(blob);
+  link.href = url;
+  link.download = projectName || "2d.json";
+  link.click();
+}
 
 /**
  * Setup
@@ -76,32 +78,57 @@ function undo(){
   for(let i = 0; i < document.getElementById("undoSize").valueAsNumber; i++) actions.pop();
   reset();
 }
+function erase(){
+  actions = [];
+  reset();
+}
+
+function reduceSize(doUntilConverge){
+  let threshold = document.getElementById("reduceFactor").valueAsNumber;
+
+  if(doUntilConverge){
+    let lastLength = actions.length;
+    reduce();
+    while(actions.length !== lastLength){
+      lastLength = actions.length;
+      reduce();
+    }
+  } else {
+    reduce();
+  }
+  reset();
+
+  function reduce(){
+    let size = actions.length;
+    for(let i = 0; i < actions.length - 2; i++){
+      let endingA = actions[i][1];
+      let startingC = actions[i+2][0];
+      if(distance(endingA, startingC) < threshold) {
+        actions[i][1][0] = actions[i+2][0][0];
+        actions[i][1][1] = actions[i+2][0][1];
+        delete actions[i+1];
+        i++;
+      }
+    }
+    // Whoa! easy way to remove undefined actions :)
+    actions = actions.filter(a => a);
+
+    if(actions.length === size) console.log("Reduce did nothing");
+  }
+}
 
 /**
  * Controls
  */
 document.onkeyup = e => {
-  console.log(e);
   if(e.ctrlKey){
     if(e.code === "KeyS"){
       downloadImage();
     } else if (e.code === "KeyZ") {
       undo();
+    } else if(e.code === "Space") {
+      reduceSize();
     }
-  } else if(e.code === "Space") {
-    console.log("init");
-    for(let i = 0; i < actions.length; i++) {
-      if(i % freq === 0) {
-
-        console.log("found one");
-        if(i-1 > -1 && i + 1 < actions.length) {
-          actions[i-1][1][0] = actions[i+1][0][0];
-          actions[i-1][1][1] = actions[i+1][0][1];
-        }
-        let removed = actions.splice(i, 1)[0];
-      }
-    }
-    reset();
   }
 };
 board.onmousemove = e => {
@@ -139,3 +166,10 @@ document.getElementById("width").onchange = e => {
 document.getElementById("lock").onchange = e => {
   mouse.lock = e.target.checked;
 };
+
+function distance(A, B){
+  return Math.sqrt(
+    Math.pow(A[0] - B[0], 2) + 
+    Math.pow(A[1] - B[1], 2)
+  );
+}
