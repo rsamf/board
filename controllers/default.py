@@ -6,8 +6,7 @@
 
 # ---- example index page ----
 def index():
-    response.flash = T("Hello World")
-    return dict(message=T('Welcome to web2py!'))
+    return dict()
 
 # ---- API (example) -----
 @auth.requires_login()
@@ -29,9 +28,15 @@ def wiki():
     auth.wikimenu() # add the wiki to the menu
     return auth.wiki() 
 
+@auth.requires_login()
 def two():
     response.view='default/2d.html'
     return dict()
+@auth.requires_login()
+def three():
+    response.view='default/3d.html'
+    return dict()
+    
 # ---- Action for login/register/etc (required for auth) -----
 def user():
     """
