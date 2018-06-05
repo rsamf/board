@@ -63,12 +63,20 @@
               <div class="twothirds rounded white padded">
                 <h3>${b.name}</h3>
                 <p>Type: ${b.board_type}</p>
-                <p>Visibility: ${b.is_public ? 'Public' : 'Private'}</p>
-                <a href="" class="orange btn">Edit</a>
-                <button v-if="b.is_public" v-on:click="displaySharingLink()" class="blue btn">Share</button>
-                <button v-on:click="deleteBoard(i)" class="red btn">Delete</button>
-                <a href="#" class="right grey btn">Close</a>
-                <p>Copy this link below to share with others</p>
+                <p>
+                  Visibility: ${b.is_public ? 'Public' : 'Private'} 
+                  <button v-on:click="toggleVisibility(b)">Toggle</button>
+                </p>
+                <a :href="getSharingLink(b, false)" class="blue btn">Draw</a>
+                <a href="#" v-on:click="deleteBoard(b)" class="red btn">Delete</a>
+                <div v-if="b.is_public" class="share">
+                  <div>
+                    Copy this link below to share with others: 
+                    <button v-if="b.is_public" v-on:click="copySharingLink(b)" class="blue btn">Copy Sharing Link</button>
+                  </div>
+                  <div>${getSharingLink(b)}</div>
+                </div>
+                <a href="#" class="grey btn">Close</a>
               </div>
             </div>
         </div>

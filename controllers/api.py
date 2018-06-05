@@ -26,7 +26,7 @@ def add_board():
 @auth.requires_login()
 def delete_board():
   if request.args(0) is not None:
-    q = (db.board.created_by == auth.user.id) & (db.board.url == request.args(0))
+    q = (db.board.created_by == auth.user.id) & (db.board.id == request.args(0))
     db(q).delete()
     return True
   return False
@@ -35,7 +35,7 @@ def delete_board():
 def edit_board_instruction():
   body = request.vars
   if request.args(0) is not None:
-    q = db.board.url == request.args(0)
+    q = db.board.id == request.args(0)
     board = db(q).select().first()
     if board is not None and (board.is_public or db.board.created_by == auth.user.id):
       board.update_record(instruction=body.instruction)
@@ -46,7 +46,7 @@ def edit_board_instruction():
 def edit_board_name():
   body = request.vars
   if request.args(0) is not None:
-    q = (db.board.created_by == auth.user.id) & (db.board.url == request.args(0))
+    q = (db.board.created_by == auth.user.id) & (db.board.id == request.args(0))
     board = db(q).select().first()
     if board is not None:
       board.update_record(name=body.name)
@@ -57,7 +57,7 @@ def edit_board_name():
 def edit_board_is_public():
   body = request.vars
   if request.args(0) is not None:
-    q = (db.board.created_by == auth.user.id) & (db.board.url == request.args(0))
+    q = (db.board.created_by == auth.user.id) & (db.board.id == request.args(0))
     board = db(q).select().first()
     if board is not None:
       if body.is_public is not None:

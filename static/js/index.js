@@ -57,7 +57,8 @@ let vue = new Vue({
         name: "New Project",
         type: "2D",
         is_public: "PRIVATE"
-    }
+    },
+    sharing: false
   },
   methods: {
     beginAdding: function() {
@@ -72,33 +73,60 @@ let vue = new Vue({
         networking.post(URL.ADD_BOARD, data, (res) => {
             console.log(res);
             this.adding = false;
+            this.getBoards();
         }, false);
+    },
+    deleteBoard: function(b){
+        networking.get(URL.DELETE_BOARD + '/' + b.id, (res) => {
+            console.log(res);
+            this.adding = false;
+            this.getBoards();
+        }, false);
+    },
+    toggleVisibility: function(b){
+        networking.post(URL.TOGGLE_VISIBILITY + '/' + b.id, {}, res => {
+            console.log(res);
+            this.getBoards();
+        }, false)
+    },
+    copySharingLink: function(b){
+        const el = document.createElement('textarea');
+        el.value = this.getSharingLink(b);
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    },
+    getSharingLink: function(b, origin=true){
+        if(b.board_type === '2D') {
+            let link = URL.BOARD_LINK_2 + '/' + b.url;
+            return origin ? window.location.origin + link : link;
+        } else {
+            let link = URL.BOARD_LINK_3 + '/' + b.url;
+            return origin ? window.location.origin + link : link;
+        }
+    },
+    getBoards: function(){
+        networking.get(URL.BOARDS, boards => {
+            console.log("n BOARD", boards);
+            vue.boards = boards;
+        });
     }
-
+  
   }
 });
 
 function setup(){
-    let req = 0;
     networking.get(URL.USER, user => {
-        console.log("n USER", user);
         vue.user = user;
-        checkReq();
         if(user) {
             networking.get(URL.BOARDS, boards => {
                 console.log("n BOARD", boards);
                 vue.boards = boards;
-                checkReq();
-            });  
-        } else {
-            checkReq();
+                vue.loading = false;
+            });
         }
     });
-
-    function checkReq(){
-        req++;
-        if(req == 2) vue.loading = false;
-    }
     
 }
 

@@ -30,12 +30,20 @@ def wiki():
 
 @auth.requires_login()
 def two():
-    response.view='default/2d.html'
-    return dict()
+    if request.args(0) is not None:
+        board = db(db.board.url == request.args(0)).select().first()
+        response.view='default/2d.html'
+        return dict(board = board)
+    return None
+
 @auth.requires_login()
 def three():
-    response.view='default/3d.html'
-    return dict()
+    if request.args(0) is not None:
+        board = db(db.board.url == request.args(0)).select().first()
+        response.view='default/3d.html'
+        return dict(board = board)
+    return None
+
     
 # ---- Action for login/register/etc (required for auth) -----
 def user():
