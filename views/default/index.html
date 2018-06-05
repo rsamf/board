@@ -1,18 +1,90 @@
 {{extend 'layout.html'}}
 
 {{block head}}
-<script src="{{=URL('static', 'js/vue.js')}}"></script>
-<script src="{{=URL('static', 'js/index.js')}}"></script>
+<link rel="stylesheet" href="{{=URL('static', 'css/index.css')}}">
 
-<div id="vue" class="vue">
-  <div v-if="user">
 
+<div id="vue" class="container center">
+  <div v-if="!loading" class="threequarters">
+    <div v-if="user" class="main-indent2">
+      <div class="btn orange rounded pulse center" v-on:click="beginAdding()">
+        <span class="center">Add <i class="fa fa-plus"></i></span>
+      </div>
+      <div v-if="adding">
+        <div class="field">
+          <label class="">Name</label>
+          <div class="">
+            <input type="text" class="fill" v-model="newBoard.name">
+          </div>
+        </div>
+        <div class="field">
+          <label class="">Board Type</label>
+          <div class="">
+            <input type="radio" name="type" value="2D" v-model="newBoard.type"> 2D
+            <input type="radio" name="type" value="3D" v-model="newBoard.type"> 3D
+          </div>
+        </div>
+        <div class="field">
+          <label for="">Visibility</label>
+          <div class="">
+            <input type="radio" name="is_public" value="PUBLIC" v-model="newBoard.is_public"> Public
+            <input type="radio" name="is_public" value="PRIVATE" v-model="newBoard.is_public"> Private
+          </div>
+        </div>
+        <div class="field">
+          <div class="btn green" v-on:click="submitAdding()">
+            Submit
+          </div>
+          <div class="btn red" v-on:click="cancelAdding()">
+            Cancel
+          </div>
+        </div>
+      </div>
+      <div v-if="boards.length === 0" class="container">
+        <h2 class="center">You have no boards at the moment. Try adding some!</h2>
+      </div>
+      <div v-else class="container">
+        <div v-for="(b, i) in boards" class="third">
+          <a class="item" :href="'#popup'+i">
+            <div class="name">${b.name}</div>
+            <div class="icon">
+              <i v-if="b.board_type === '2D'" class="fa fa-photo fa-5x"></i>
+              <i v-else class="fa fa-cube fa-5x"></i>
+            </div>
+            <div class="meta">
+              <span class="left">${new Date(b.created_on).toLocaleDateString()}</span>
+              <span class="right">
+                <i v-if="b.is_public" class="fa fa-eye"></i>
+                <i v-else class="fa fa-eye-slash"></i>
+              </span>
+            </div>
+          </a>
+          <div class="modal" :id="'popup'+i">
+              <div class="twothirds rounded white padded">
+                <h3>${b.name}</h3>
+                <p>Type: ${b.board_type}</p>
+                <p>Visibility: ${b.is_public ? 'Public' : 'Private'}</p>
+                <a href="" class="orange btn">Edit</a>
+                <button v-if="b.is_public" v-on:click="displaySharingLink()" class="blue btn">Share</button>
+                <button v-on:click="deleteBoard(i)" class="red btn">Delete</button>
+                <a href="#" class="right grey btn">Close</a>
+                <p>Copy this link below to share with others</p>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="main-indent2">
+      <h1 class="center">Log in and create boards!</h1>
+      <p class="center">Logging in will allow you to create, view, and edit other 2d or 3d images</p>
+    </div>
   </div>
   <div v-else>
-    <h1>Please Log in to use this site</h1>
-    <p>Logging in will allow you to create and view other boards</p>
+    Loading...
   </div>
-  
 </div>
+
+<script src="{{=URL('static', 'js/vue.js')}}"></script>
+<script src="{{=URL('static', 'js/index.js')}}"></script>
 
 {{end}}

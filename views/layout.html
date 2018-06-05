@@ -5,11 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <link href="{{=URL('static','css/stupid.css')}}" rel="stylesheet" type="text/css"/>
-    <link href="{{=URL('static','css/custom.css')}}" rel="stylesheet" type="text/css"/>
     <link href="{{=URL('static','css/calendar.css')}}" rel="stylesheet" type="text/css"/>
     <link href="{{=URL('static','css/web2py.css')}}" rel="stylesheet" type="text/css"/>
-    <link href="{{=URL('static','css/myapp.css')}}" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="{{=URL('static', 'font-awesome-4.6.3/css/font-awesome.min.css')}}">
+    <script>
+      const URL = {
+        USER: "{{=URL('api','user')}}",
+        BOARDS: "{{=URL('api','boards')}}",
+        BOARD: "{{=URL('api','boards')}}",
+        ADD_BOARD: "{{=URL('api','add_board')}}",
+        DELETE_BOARD: "{{=URL('api','delete_board')}}",
+        TOGGLE_VISIBILITY: "{{=URL('api','edit_board_is_public')}}"
+      };
+    </script>
     {{include "web2py_ajax.html"}}
   </head>
   <body class="black">
@@ -50,7 +58,6 @@
       </div>
     </footer>
   </body>
-  <script src="{{=URL('static','js/marked.min.js')}}"></script>
   <script src="{{=URL('static','js/vue.min.js')}}"></script>
   {{block bottomjs}}{{end}}
   <script>

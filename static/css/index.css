@@ -1,0 +1,63 @@
+.indent {
+  padding: 40px 40px 40px 40px;
+}
+
+.main-indent {
+  padding: 100px 400px 250px 400px;
+}
+.main-indent2 {
+  padding: 20px 0 250px 0;
+}
+
+.fluid {
+  width: 100%;
+}
+
+.field {
+  margin: 10px 0 10px 0;
+}
+
+.item {
+  display: block;
+  padding: 15px 15px 15px 15px;
+  margin: 10px 10px 10px 10px;
+  width: 200px;
+  height: 200px;
+  border: 1px solid #c8c8c8;
+  color: black;
+  background-color: #f6f6f6 !important;
+  -webkit-transition: box-shadow 0.5s; /* Safari */
+  transition: box-shadow 0.5s;
+}
+.item:hover {
+  box-shadow: 5px 5px 3px grey;
+  cursor: pointer;
+  background-color: white !important;
+  color: black !important;
+  text-decoration: none !important;
+}
+
+.item>.name{
+  text-align: center !important;
+  max-height: 20px;
+  text-decoration: inherit;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+.item>.meta{
+  color: #c8c8c8;
+}
+.item>.meta>.left{
+  position: relative;
+  left: 0;
+}
+.item>.meta>.right{
+  position: relative;
+  right: 0;
+}
+
+.item>.icon {
+  text-align: center;
+  margin: 25px 0 25px 0;
+}

@@ -53,3 +53,19 @@ CREATE TABLE "auth_cas"(
     "renew" CHAR(1)
 );
 success!
+timestamp: 2018-05-31T17:08:44.739152
+CREATE TABLE "board"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "instruction" BLOB,
+    "name" TEXT,
+    "is_public" CHAR(1)
+);
+success!
+timestamp: 2018-06-04T10:59:53.701547
+ALTER TABLE "board" ADD "url" CHAR(512);
+timestamp: 2018-06-04T10:59:53.720278
+ALTER TABLE "board" ADD "board_type" INTEGER;
+success!
+success!
