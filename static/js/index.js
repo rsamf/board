@@ -125,6 +125,8 @@ function setup(){
                 vue.boards = boards;
                 vue.loading = false;
             });
+        } else {
+            vue.loading = false;
         }
     });
     

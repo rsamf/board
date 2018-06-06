@@ -16,7 +16,7 @@ def get_user_email():
 db.define_table('board',
     Field('created_on', 'datetime', default=request.now),
     Field('created_by', 'reference auth_user', default=auth.user_id),
-    Field('instruction', 'blob'),
+    Field('instruction', 'string'),
     Field('name', 'text', default='New Board'),
     Field('is_public', 'boolean', default=False),
     Field('url', 'string', default=uuid.uuid4),

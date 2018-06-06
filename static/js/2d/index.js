@@ -4,12 +4,51 @@ let rect = board.getBoundingClientRect();
 let mouse = {
   lock: false
 };
+let savingId;
 
 // Every element in action is an array
 // Each array has values to structure a line
 // There are 4 values per line:
 // [starting coord, ending coord, color, width]
-let actions = []; 
+let actions = [];
+const networking = {
+  get: function(path, callback, json=true){
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = () => {
+      if(xhttp.readyState === XMLHttpRequest.DONE) {
+        if(xhttp.status === 200)
+          // console.log(xhttp.responseText);
+          callback(json ? JSON.parse(xhttp.responseText): xhttp.responseText);
+        else
+          console.error(xhttp.responseText);
+      }
+    };
+    xhttp.open("GET", path, true);
+    xhttp.send();
+  },
+  put: function(path, data, callback, json=true){
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = () => {
+      if(xhttp.readyState === XMLHttpRequest.DONE) {
+        if(xhttp.status === 200)
+          callback(json ? JSON.parse(xhttp.responseText): xhttp.responseText);
+        else
+          console.error(xhttp.responseText);
+      }
+    };
+    xhttp.open("PUT", path, true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send(JSON.stringify(data));
+  },
+  /**
+   * LINE - array
+   * UNDO - int
+   * ERASE
+   */
+  sendAction: function(type, data){
+
+  }
+};
 
 setup();
 
@@ -18,19 +57,21 @@ setup();
  * Download
  */
 function downloadImage(){
-  let projectName = document.getElementById('project').value || "2d.png";
+  let projectName = document.getElementById('project').innerText || "2d";
   let link = document.createElement('a');
   link.href = board.toDataURL();
   link.download = projectName;
   link.click();
+  reset();
 }
 
 function downloadJSON(){
   reduceSize(true);
-  let projectName = document.getElementById('project').value;
+  let projectName = document.getElementById('project').innerText || "2d";
   let link = document.createElement('a');
-  let blob = new Blob([JSON.stringify(actions)], {type: "application/json"});
-  let url = URL.createObjectURL(blob);
+  let blob = new Blob([JSON.stringify({actions:actions})], {type: "application/json"});
+  console.log(blob, typeof(blob));
+  let url = window.URL.createObjectURL(blob);
   link.href = url;
   link.download = projectName || "2d.json";
   link.click();
@@ -42,47 +83,63 @@ function downloadJSON(){
 window.onresize = e => {
   board.width = document.body.clientWidth;
   board.height = document.body.clientHeight;
-  setup();
+  reset();
 };
-
 function setup(){
-  board.width = document.body.clientWidth;
-  board.height = document.body.clientHeight;
-  ctx.strokeStyle = document.getElementById("color").value;
-  ctx.lineWidth = document.getElementById("width").value;
-  ctx.lineCap = 'round';
-  draw();
+  getBoard(b => {
+    board.width = document.body.clientWidth;
+    board.height = document.body.clientHeight;
+    console.log(b.instruction);
+    actions = b.instruction ? JSON.parse(b.instruction) : [];
+    document.getElementById("project").innerText = b.name;
+    reset();
+  });
 }
-
 function clear(){
   ctx.clearRect(0, 0, board.width, board.height);
 }
-
 function reset(){
+  ctx.strokeStyle = document.getElementById("color").value;
+  ctx.lineWidth = document.getElementById("width").value;
+  ctx.lineCap = 'round';
   clear();
-  setup();
+  draw();
 }
-
 function draw(){
   actions.forEach(a => {
     ctx.beginPath();
-    ctx.moveTo(a[0][0] - rect.left, a[0][1] - rect.top);
-    ctx.lineTo(a[1][0] - rect.left, a[1][1] - rect.top);
     ctx.strokeStyle = a[2];
     ctx.lineWidth = a[3];
+    ctx.moveTo(a[0][0] - rect.left, a[0][1] - rect.top);
+    ctx.lineTo(a[1][0] - rect.left, a[1][1] - rect.top);
     ctx.stroke();
   });
 }
-
 function undo(){
-  for(let i = 0; i < document.getElementById("undoSize").valueAsNumber; i++) actions.pop();
+  let amount = document.getElementById("undoSize").valueAsNumber;
+  networking.sendAction("UNDO", amount);
+  for(let i = 0; i < amount; i++) 
+    actions.pop();
   reset();
+  save();
 }
 function erase(){
+  networking.sendAction("ERASE");
   actions = [];
   reset();
+  save();
 }
-
+function save(){
+  console.log("saving");
+  networking.put(URL.SAVE + '/' + BOARD_ID, {
+    instruction: JSON.stringify(actions)
+  }, (res)=>{
+    console.log("saved", res);
+  }, false);
+}
+function getBoard(callback){
+  networking.get(URL.BOARD + '/' + BOARD_ID, callback);
+}
 function reduceSize(doUntilConverge){
   let threshold = document.getElementById("reduceFactor").valueAsNumber;
 
@@ -97,7 +154,6 @@ function reduceSize(doUntilConverge){
     reduce();
   }
   reset();
-
   function reduce(){
     let size = actions.length;
     for(let i = 0; i < actions.length - 2; i++){
@@ -112,7 +168,6 @@ function reduceSize(doUntilConverge){
     }
     // Whoa! easy way to remove undefined actions :)
     actions = actions.filter(a => a);
-
     if(actions.length === size) console.log("Reduce did nothing");
   }
 }
@@ -133,19 +188,24 @@ document.onkeyup = e => {
 };
 board.onmousemove = e => {
   if(!mouse.drawingActive) return;
-  actions.push([
+  let toPush = [
     [mouse.lastX, mouse.lastY],
     [e.clientX, e.clientY],  
     document.getElementById("color").value,
     document.getElementById("width").valueAsNumber
-  ]);
+  ];
+  networking.sendAction("LINE", toPush);
+  actions.push(toPush);
   ctx.beginPath();
   ctx.moveTo(mouse.lastX - rect.left, mouse.lastY - rect.top);
   ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
   ctx.stroke();
   mouse.lastX = e.clientX;
   mouse.lastY = e.clientY;
-
+  if(savingId) {
+    clearInterval(savingId);
+  }
+  savingId = setTimeout(save, 1000);
 };
 board.onmousedown = e => {
   mouse.drawingActive = !mouse.drawingActive;

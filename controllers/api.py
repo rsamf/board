@@ -11,7 +11,7 @@ def boards():
 @auth.requires_login()
 def board():
   if request.args(0) is not None:
-    b = db(db.board.url == request.args(0)).select()
+    b = db(db.board.id == request.args(0)).select().first()
     return response.json(b or [])
   return response.json([])
 

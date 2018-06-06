@@ -69,3 +69,4 @@ timestamp: 2018-06-04T10:59:53.720278
 ALTER TABLE "board" ADD "board_type" INTEGER;
 success!
 success!
+success!

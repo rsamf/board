@@ -1,10 +1,4 @@
-# -*- coding: utf-8 -*-
-# -------------------------------------------------------------------------
-# This is a sample controller
-# this file is released under public domain and you can use without limitations
-# -------------------------------------------------------------------------
 
-# ---- example index page ----
 def index():
     return dict()
 
@@ -33,7 +27,7 @@ def two():
     if request.args(0) is not None:
         board = db(db.board.url == request.args(0)).select().first()
         response.view='default/2d.html'
-        return dict(board = board)
+        return dict(id=board.id)
     return None
 
 @auth.requires_login()
@@ -41,7 +35,7 @@ def three():
     if request.args(0) is not None:
         board = db(db.board.url == request.args(0)).select().first()
         response.view='default/3d.html'
-        return dict(board = board)
+        return dict(id = board.id)
     return None
 
     
