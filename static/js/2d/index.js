@@ -116,12 +116,18 @@
     function setSocket(room){
       socket.emit('join', room);
       socket.on('ERASE', ()=>{
-        console.log("ERASING");
+        actions = [];
+        reset();
       });
       socket.on('LINE', (data) => {
-        console.log(data);
         actions.push(data);
         draw();
+      });
+      socket.on('UNDO', (data)=>{
+        let amount = data;
+        for(let i = 0; i < amount; i++) 
+          actions.pop();
+        reset();
       });
     }
   }
