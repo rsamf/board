@@ -4,8 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Richard Franklin | Prog4</title>
+    <title>3D Board</title>
     <link rel="stylesheet" href="{{=URL('static', 'css/3d.css')}}">
+    <script>
+        const URL = {
+            SAVE: "{{=URL('api','edit_board_instruction')}}",
+            USER: "{{=URL('api','user')}}",
+            BOARD: "{{=URL('api','board')}}"
+        };
+        const BOARD_ID = "{{=id}}";
+    </script>
 </head>
 <body>
 
@@ -62,6 +70,8 @@
     </div>
 
     <!-- <script src="../lib/ioSOR.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <script src="{{=URL('static','js/3d/networking.js')}}"></script>
     <script src="{{=URL('static','js/3d/math.js')}}"></script>    
     <script src="{{=URL('static','js/3d/draw.js')}}"></script>
     <script src="{{=URL('static','js/3d/objtransform.js')}}"></script>    
@@ -69,5 +79,6 @@
     <script src="{{=URL('static','js/3d/interface.js')}}"></script>
     <script src="{{=URL('static','js/3d/loop.js')}}"></script>
     <script src="{{=URL('static','js/3d/index.js')}}"></script>
+
 </body>
 </html>

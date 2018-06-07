@@ -66,6 +66,7 @@ function attachDrawFunctionToEvents(drawFunction){
     CPerase.onclick = e => {
         spines = [[]];
         props = [];
+        networking.sendAction("ERASE");
         drawFunction();
     };
     CPresetView.onclick = e => {
@@ -152,8 +153,8 @@ function select(index, drawFunction){
         `;
         let colorInput = document.getElementById("colorInput");
         colorInput.onchange = e => {
-            console.log(e.target.value);
             props[index - 2].color = e.target.value;
+            save();
             drawFunction();
         };
         file.innerHTML = `

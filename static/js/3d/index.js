@@ -19,6 +19,7 @@
 
     attachDrawFunctionToEvents(draw);
     attachDrawFunctionToLoop(draw);
+    attachDrawFunctionToNetworking(draw);
     draw();
     
     canvas.onmousedown = e => {
@@ -69,14 +70,17 @@
             // finish spine
             else {
                 drawingState = DrawingState.Inactive;
-                spines.push([]);
-                props.push({
+                let p = {
                     position : [0,0,0],
                     rotation : [0,0,0],
                     scale : [1,1,1],
                     color: "#92edd5",
                     image : null
-                });
+                };
+                networking.sendAction("LINE", {spine:spines[spines.length-1], props:p});
+                spines.push([]);
+                props.push(p);
+                save();
             }
         }
 
@@ -136,6 +140,7 @@
             } else if(selected > 1) {
                 let index = selected - 2;
                 props[index].position = Vector.add(props[index].position, displacement);
+                save();
             }
             draw();
         }
@@ -143,6 +148,7 @@
         else if(zDragState === DragState.Active){
             let index = selected - 2;
             props[index].position[2] += displacement[1];
+            save();
             draw();            
         }
         // adjust rotation
@@ -150,6 +156,7 @@
             let index = selected - 2;
             if(Math.abs(displacement[1]) > Math.abs(displacement[0])) props[index].rotation[0] += displacement[1]*4; // *4 to make the rotation a bit faster  
             else props[index].rotation[2] += displacement[0]*4;
+            save();
             draw();            
         }
         lastPoint = point;        
@@ -170,6 +177,7 @@
                 color: "#dcebfd",
                 image : null
             });
+            save();
         }
         clear(gl);
         // Draw created GCs
