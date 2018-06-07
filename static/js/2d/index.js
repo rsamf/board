@@ -224,15 +224,19 @@
   };
   board.onmousemove = e => {
     if(!mouse.drawingActive) return;
+    let color = document.getElementById("color").value;
+    let width = document.getElementById("width").valueAsNumber;
     let toPush = [
       [mouse.lastX, mouse.lastY],
       [e.clientX, e.clientY],  
-      document.getElementById("color").value,
-      document.getElementById("width").valueAsNumber
+      color,
+      width
     ];
     networking.sendAction("LINE", toPush);
     actions.push(toPush);
     ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
     ctx.moveTo(mouse.lastX - rect.left, mouse.lastY - rect.top);
     ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
     ctx.stroke();

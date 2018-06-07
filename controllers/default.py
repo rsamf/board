@@ -26,9 +26,11 @@ def wiki():
 def two():
     if request.args(0) is not None:
         board = db(db.board.url == request.args(0)).select().first()
-        response.view='default/2d.html'
-        return dict(id=board.id)
-    return None
+        if board.is_public or auth.user.id == board.created_by:
+            response.view='default/2d.html'
+            return dict(id=board.id)
+    raise HTTP(404)
+
 
 @auth.requires_login()
 def three():
