@@ -3,8 +3,6 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 let sockets = {};
 
-
-
 io.on('connection', function(socket){
   console.log('connecting', socket.id);
   sockets[socket.id] = socket;
@@ -24,25 +22,18 @@ io.on('connection', function(socket){
 
   // Board Control
   socket.on("ERASE", function(data){
-    console.log(data);
     socket.to(sockets[socket.id].room).emit("ERASE");
   });
 
   socket.on("LINE", function(data, hash=""){
-    console.log(data, hash);
     socket.to(sockets[socket.id].room).emit("LINE", data, hash);
   });
 
   socket.on("UNDO", function(data, hash=""){
-    console.log(data, hash);
     socket.to(sockets[socket.id].room).emit("UNDO", data, hash);
   });
 
 });
-
-// app.get('/', ()=>{
-//   console.log("got req");
-// });
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
