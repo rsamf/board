@@ -22,6 +22,7 @@
     </canvas>
 
     <div id="top-right-pane">
+        <div id="project"></div>
         <ul id="object-options">
             <h4>Object Options</h4>
             <div id="obj-name">
@@ -51,12 +52,6 @@
                 </div>
             </li>
             <li>
-                <input type="file" id="file-input"/>
-                <div>
-                    <button id="file-load" type="button">Load</button>
-                </div>
-            </li>
-            <li>
                 <button id="erase">
                     ERASE ALL
                 </button>
@@ -71,6 +66,7 @@
 
     <!-- <script src="../lib/ioSOR.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <script src="{{=URL('static','js/3d/ioSOR.js')}}"></script>
     <script src="{{=URL('static','js/3d/networking.js')}}"></script>
     <script src="{{=URL('static','js/3d/math.js')}}"></script>    
     <script src="{{=URL('static','js/3d/draw.js')}}"></script>

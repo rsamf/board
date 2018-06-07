@@ -13,12 +13,10 @@ let selected = -1;
 const
     CPprojection = document.getElementById("projection"),
     CPdiffCol = document.getElementById("diffuseColor"),
-    CPmethod = document.getElementById("method");
-    CPerase = document.getElementById("erase");
-    CPresetView = document.getElementById("resetView");
-    CPfileLoad = document.getElementById("file-load");
+    CPmethod = document.getElementById("method"),
+    CPerase = document.getElementById("erase"),
+    CPresetView = document.getElementById("resetView")
 ;
-// setupIOSOR("file-input");
 
 const DrawingMethod = {
     Manual : "MANUAL",
@@ -52,17 +50,7 @@ function attachDrawFunctionToEvents(drawFunction){
     };
     CPmethod.onchange = e => {
         cp.drawingMethod = e.target.value;
-    };
-    CPfileLoad.onclick = e => {
-        let sor = readFile();
-        if(sor){
-            let loadedMesh = {
-                vertices : sor.vertices,
-                indicees : sor.indexes
-            };
-            drawFunction(-1, loadedMesh);           
-        }
-    };   
+    }; 
     CPerase.onclick = e => {
         spines = [[]];
         props = [];
@@ -161,8 +149,8 @@ function select(index, drawFunction){
             <label for="file-save">Save as .obj</label><br>        
             <button id="file-save" type="button">Save</button>                    
         `;
-        let fileInput = document.getElementById("file-save");
-        fileInput.onclick = e => {
+        let saveButton = document.getElementById("file-save");
+        saveButton.onclick = e => {
             let mesh = drawFunction(index-2);
             if(mesh){
                 saveFile(new SOR(`GC ${index - 2}`, mesh.vertices, mesh.indicees));            

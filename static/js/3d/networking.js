@@ -87,12 +87,12 @@ function save(){
       drawFunction();
     }
     setSocket(b.id);
-      // document.getElementById("project").innerText = b.name;
+    document.getElementById("project").innerText = b.name;
   });
   function setSocket(room){
     socket.emit('join', room);
     socket.on('ERASE', ()=>{
-      spines = [];
+      spines = [[]];
       props = [];
       drawFunction();
     });
@@ -109,6 +109,7 @@ function save(){
         spines.pop();
         props.pop();
       }
+      spines.push([]);
       drawFunction();
     });
   }

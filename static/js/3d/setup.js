@@ -6,6 +6,9 @@
  */
 
 const canvas = document.getElementById("canvas");
+canvas.width = document.body.clientWidth;
+canvas.height = document.body.clientHeight;
+
 const gl = initGL();
 gl.enable(gl.DEPTH_TEST);
 gl.enable(gl.CULL_FACE);
@@ -68,14 +71,24 @@ function getTriangleShaders(lit){
                 'vec3 diffuse;',
                 'vec3 specular;',
                 'vec3 _normal = normalize(vec3(model * vec4(normal, 1.0)));',
-
-                // 3 DIRECTIONAL LIGHT SOURCES
-                // BOTTOM
-                'diffuse = 0.3 * max(dot(_normal, vec3(0,-1,-1)) * d_color, 0.0);',
-                // TOP LEFT
-                'diffuse += 0.3 * max(dot(_normal, vec3(-1,1,-1)) * d_color, 0.0);',
-                // TOP RIGHT
-                'diffuse += 0.3 * max(dot(_normal, vec3(1,1,-1)) * d_color, 0.0);',
+                'float brightness = 0.2;',
+                // 8 DIRECTIONAL LIGHT SOURCES
+                // BOTTOM LEFT BACK
+                'diffuse  = brightness * max(dot(_normal, vec3(-1,-1,-1)) * d_color, 0.0);',
+                // BOTTOM LEFT FWD
+                'diffuse += brightness * max(dot(_normal, vec3(-1,-1,1)) * d_color, 0.0);',
+                // BOTTOM RIGHT BACK
+                'diffuse += brightness * max(dot(_normal, vec3(-1,1,-1)) * d_color, 0.0);',
+                // BOTTOM RIGHT FWD
+                'diffuse += brightness * max(dot(_normal, vec3(-1,1,1)) * d_color, 0.0);',
+                // TOP LEFT BACK
+                'diffuse += brightness * max(dot(_normal, vec3(1,-1,-1)) * d_color, 0.0);',
+                // TOP LEFT FWD
+                'diffuse += brightness * max(dot(_normal, vec3(1,-1,1)) * d_color, 0.0);',
+                // TOP RIGHT BACK
+                'diffuse += brightness * max(dot(_normal, vec3(1,1,-1)) * d_color, 0.0);',
+                // TOP RIGHT FWD
+                'diffuse += brightness * max(dot(_normal, vec3(1,1,1)) * d_color, 0.0);',
                
 
                 // Set varying variables to pass to fragment shader

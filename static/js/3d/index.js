@@ -209,7 +209,7 @@
 
         function drawSingle(spine){
             // draw a single cylinder
-            return Shape.getCylinder(.05, cp.resolution, spine[0], spine[1]);;
+            return Shape.getCylinder(.03, cp.resolution, spine[0], spine[1]);;
         }
 
         function drawMultiple(spine){
@@ -225,7 +225,7 @@
                 /*
                     implementation for Shape.getConnectedCylinders() is located in math.js, line 388
                 */
-                let mesh = Shape.getConnectedCylinders(.05, cp.resolution, {
+                let mesh = Shape.getConnectedCylinders(.03, cp.resolution, {
                     length : Vector.distance(spine[i], spine[i + 1]),
                     offset : spine[i],
                     axis : Vector.subtract(spine[i + 1], spine[i]),
