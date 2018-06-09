@@ -1,7 +1,7 @@
 let saveId = null;
 let drawFunction = function(){};
 
-let socket = io("http://localhost:3000");
+let socket = io("https://"+window.location.hostname+":8001");
 
 
 const networking = {

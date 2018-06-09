@@ -1,7 +1,16 @@
 var app = require('express')();
-var http = require('http').Server(app);
+var fs = require('fs');
+var http = require('https').Server({
+  key: fs.readFileSync('../../../myapp.key'),
+  cert: fs.readFileSync('../../../myapp.crt'),
+}, app);
 var io = require('socket.io')(http);
 let sockets = {};
+
+app.get('/', (req, res)=>{
+  console.log("got req");
+  res.json({msg: "success"});
+});
 
 io.on('connection', function(socket){
   console.log('connecting', socket.id);
@@ -34,7 +43,7 @@ io.on('connection', function(socket){
   });
 
 });
-
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+const port = 8001;
+http.listen(port, function(){
+  console.log('listening on *:'+port);
 });
