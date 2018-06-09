@@ -49,21 +49,7 @@
      * ERASE
      */
     sendAction: function(type, data){
-      let actionHash;
-      // if(type !== "ERASE") {
-      //   actionHash = hash(JSON.stringify(actions));
-      // }
-      console.log(type, data);
-      socket.emit(type, data, actionHash);
-
-      function hash(s){
-        return s
-          .split("")
-          .reduce((a, b) => {
-            a = ((a << 5) - a) + b.charCodeAt(0);
-            return a&a;
-          }, 0);          
-      }
+      socket.emit(type, data, null);
     }
   };
   
@@ -87,7 +73,6 @@
     let projectName = document.getElementById('project').innerText || "2d";
     let link = document.createElement('a');
     let blob = new Blob([JSON.stringify({actions:actions})], {type: "application/json"});
-    console.log(blob, typeof(blob));
     let url = window.URL.createObjectURL(blob);
     link.href = url;
     link.download = projectName || "2d.json";
@@ -107,7 +92,6 @@
       setSocket(b.id);
       board.width = document.body.clientWidth;
       board.height = document.body.clientHeight;
-      // console.log(b.instruction);
       actions = b.instruction ? JSON.parse(b.instruction) : [];
       document.getElementById("project").innerText = b.name;
       reset();
