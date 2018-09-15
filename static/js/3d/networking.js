@@ -1,7 +1,7 @@
 let saveId = null;
 let drawFunction = function(){};
 
-let socket = io("https://"+window.location.hostname+":8001");
+let socket = io("https://board-io.herokuapp.com/");
 
 
 const networking = {
