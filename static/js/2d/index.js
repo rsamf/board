@@ -7,7 +7,7 @@
     lock: false
   };
   let savingId;
-  let socket = io("https://"+window.location.hostname+":8001");
+  let socket = io("https://board-io.herokuapp.com/");
   
   // Every element in action is an array
   // Each array has values to structure a line
